@@ -1,2 +1,0 @@
-# Grafica
-wavwsurfe.js
