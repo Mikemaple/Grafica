@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Audio grafica</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/wavesurfer.js"></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.1/dist/html2canvas.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js"
+    ></script>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm 12">
+          <form>
+            <div class="form-group">
+              <label for="file">Seleccione un archivo de audio:</label>
+              <input
+                type="file"
+                class="form-control"
+                id="file"
+                aria-describedby="emailHelp"
+                accept="audio/*"
+              />
+              <small id="emailHelp" class="form-text text-muted"
+                >Sirve para graficar el espectrograma del audio para generar
+                imagnes.</small
+              >
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm 12" id="screen">
+          <div id="waveform"></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm 12">
+          <a id="download">
+            <input
+              type="button"
+              id="descarga"
+              class="btn btn-success"
+              value="Descargar"
+              onClick="DownloadAsImage()"
+              disabled="true"
+            />
+          </a>
+          <div id="midiv"></div>
+        </div>
+      </div>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+  <script>
+    wavesurfer = WaveSurfer.create({
+      container: "#waveform",
+      color: "black",
+      waveColor: "black",
+      progressColor: "black"
+    });
+
+    //load audio file
+    $("#file").change(function (event) {
+      var tmppath = URL.createObjectURL(event.target.files[0]);
+       wavesurfer.load(tmppath);
+       $("#descarga").prop("disabled", false);
+    });
+
+    function downloadURI(uri, name) {
+      var link = document.createElement("a");
+
+      link.download = name;
+      link.href = uri;
+      document.body.appendChild(link);
+      link.click();
+      clearDynamicLink(link);
+    }
+
+    function DownloadAsImage() {
+      var element = $("#screen")[0];
+      html2canvas(element).then(function(canvas) {
+        var myImage = canvas.toDataURL();
+        downloadURI(myImage, "grafica.jpg");
+      });
+    }
+  </script>
+</html>
